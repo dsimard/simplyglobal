@@ -1,16 +1,13 @@
 ActionController::Base.class_eval do
 	# Check if it should render with the language defined in SimplyGlobal
 	def render_with_simply_global(options = nil, &block)
-		logger.debug("BEF")
 		if should_use_locale?(options) 
-			logger.debug("IN")
 			# If it's a partial, try to load it
 			if options && options[:partial]
 				logger.debug("It a partial at #{options[:partial]}")
 				options[:partial] << "_" << SimplyGlobal.locale.to_s
 				logger.debug("The new partial is #{options[:partial]}")
 			elsif !options || (options && !options[:template])
-				logger.debug("TEMP")
 				# Check if the template file exists
 				template = "#{controller_name}/#{action_name}_#{SimplyGlobal.locale.to_s}"
 				logger.debug("Check if #{RAILS_ROOT}/app/views/#{template} exists")
@@ -18,18 +15,21 @@ ActionController::Base.class_eval do
 				options[:template] = template if File.exist? "#{RAILS_ROOT}/app/views/#{template}.html.erb"
 			end
 		end
-		logger.debug("OUT")
 	
 		render_without_simply_global(options, block)
 	end
 	
 	# Redirect with SimplyGlobal
 	def redirect_to_with_simply_global(options = {}, response_status = {})
-		if should_use_locale?(options)
-			options[:locale] = SimplyGlobal.locale.to_s			
+		# Check if a hash because redirect_to is called recursively
+		# First time, the options is a hash
+		# Second time, the options is a string containing the translated URL
+		if options.is_a? Hash 
+			if should_use_locale?(options)
+				options[:locale] = SimplyGlobal.locale.to_s
+			end
+			options[:use_simply_global] = nil if options[:use_simply_global]
 		end
-		
-		options[:use_simply_global] = nil if options[:use_simply_global]
 		
 		redirect_to_without_simply_global(options, response_status)
 	end

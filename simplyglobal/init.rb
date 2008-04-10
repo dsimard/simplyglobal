@@ -1,2 +1,2 @@
 require "simplyglobal"
-require "view_helper.rb"
+require "things.rb"

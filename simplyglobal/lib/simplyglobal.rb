@@ -1,21 +1,24 @@
 class SimplyGlobal
 	# Looks like we have to init the class variables
+	class << self; attr_accessor :locale end
+	@locale = nil
+	
 	@@languages = {}
-	@@locale = nil
+	#@@locale = nil
 	@@always_use = true
 	
 	# Return the locale
 	# If default, returns nil
-	def self.locale
-		@@locale
-	end
+	#def self.locale
+	#	@@locale
+	#end
 	
 	# Sets the locale
 	# If string, it will be converted to a symbol
-	def self.locale=(x)
-		x = x.to_sym if x.is_a? String 	
-		@@locale=x 
-	end
+	#def self.locale=(x)
+	#	x = x.to_sym if x.is_a? String 	
+	#	@@locale=x 
+	#end
 	
 	# Use for render and redirect to ?
 	def self.always_use?

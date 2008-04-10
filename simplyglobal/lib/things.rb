@@ -26,6 +26,7 @@ ActionController::Base.class_eval do
 		# Second time, the options is a string containing the translated URL
 		if options.is_a? Hash 
 			if should_use_locale?(options)
+logger.debug("LOCALE : #{SimplyGlobal.locale.to_s}")
 				options[:locale] = SimplyGlobal.locale.to_s
 			end
 			options[:use_simply_global] = nil if options[:use_simply_global]

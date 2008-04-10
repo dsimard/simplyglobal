@@ -39,8 +39,8 @@ ActionController::Base.class_eval do
 	
 	private
 	# Check if it should render with the language defined in SimplyGlobal
-	def should_use_locale?(options=nil)
-		(SimplyGlobal.always_use? || (options && options[:use_simply_global])) && SimplyGlobal.locale
+	def should_use_locale?(options={})
+		(SimplyGlobal.always_use? || options[:use_simply_global]) && SimplyGlobal.locale
 	end
 end
 	

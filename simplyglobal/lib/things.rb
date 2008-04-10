@@ -26,7 +26,6 @@ ActionController::Base.class_eval do
 		# Second time, the options is a string containing the translated URL
 		if options.is_a? Hash 
 			if should_use_locale?(options)
-logger.debug("LOCALE : #{SimplyGlobal.locale.to_s}")
 				options[:locale] = SimplyGlobal.locale.to_s
 			end
 			options[:use_simply_global] = nil if options[:use_simply_global]
@@ -37,11 +36,10 @@ logger.debug("LOCALE : #{SimplyGlobal.locale.to_s}")
 	
 	alias_method_chain :render, :simply_global
 	alias_method_chain :redirect_to, :simply_global
-	
+		
 	private
 	# Check if it should render with the language defined in SimplyGlobal
 	def should_use_locale?(options={})
 		(SimplyGlobal.always_use? || options[:use_simply_global]) && SimplyGlobal.locale
 	end
 end
-	

@@ -4,7 +4,7 @@ ActionController::Base.class_eval do
 		if should_use_locale?(options) 
 			# If it's a partial, try to load it
 			if options && options[:partial]
-				logger.debug("It a partial at #{options[:partial]}")
+				logger.debug("It's a partial at #{options[:partial]}")
 				options[:partial] << "_" << SimplyGlobal.locale.to_s
 				logger.debug("The new partial is #{options[:partial]}")
 			elsif !options || (options && !options[:template])
@@ -19,7 +19,7 @@ ActionController::Base.class_eval do
 		render_without_simply_global(options, block)
 	end
 	
-	# Redirect with SimplyGlobal
+	# Redirect with SimplyGlobal 
 	def redirect_to_with_simply_global(options = {}, response_status = {})
 		# Check if a hash because redirect_to is called recursively
 		# First time, the options is a hash
@@ -42,4 +42,24 @@ ActionController::Base.class_eval do
 	def should_use_locale?(options={})
 		(SimplyGlobal.always_use? || options[:use_simply_global]) && SimplyGlobal.locale
 	end
+end
+
+ActionView::Base.class_eval do
+	def render_with_simply_global(options = {}, old_local_assigns = {}, &block)
+		if (SimplyGlobal.always_use? || options[:use_simply_global]) && options[:partial]
+			logger.debug("It's a partial at #{options[:partial]}")
+			new_path = "#{options[:partial]}_#{SimplyGlobal.locale.to_s}"
+			
+			check = new_path.split(/\//) 
+			check[check.length-1] = "_" << check[check.length-1]
+			check = check.join("/")
+			
+			check = "#{RAILS_ROOT}/app/views/#{check}.html.erb"
+			options[:partial] = new_path if File.exist? check
+		end
+		
+		render_without_simply_global(options, old_local_assigns, &block)
+	end 
+
+	alias_method_chain :render, :simply_global
 end

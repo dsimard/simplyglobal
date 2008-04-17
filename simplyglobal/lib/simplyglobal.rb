@@ -60,7 +60,7 @@ class SimplyGlobal
 			translated = @@languages[locale][str] if locale && @@languages[locale]
 			translated ||= str
 			
-			return translated			
+			return translated
 		end
 	end
 end

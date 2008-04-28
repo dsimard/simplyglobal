@@ -49,10 +49,14 @@ ActionView::Base.class_eval do
 		if (SimplyGlobal.always_use? || options[:use_simply_global]) && options[:partial]
 			logger.debug("It's a partial at #{options[:partial]}")
 			new_path = "#{options[:partial]}_#{SimplyGlobal.locale.to_s}"
+			logger.debug("New path : #{new_path}")
 			
 			check = new_path.split(/\//) 
 			check[check.length-1] = "_" << check[check.length-1]
+			check.insert(0, @template.controller.controller_name) if check.length == 1
 			check = check.join("/")
+			
+			logger.debug("CHECK : " + check)
 			
 			check = "#{RAILS_ROOT}/app/views/#{check}.html.erb"
 			options[:partial] = new_path if File.exist? check

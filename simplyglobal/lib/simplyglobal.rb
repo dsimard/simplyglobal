@@ -58,6 +58,7 @@ class SimplyGlobal
 		
 			# Get the string in its localized version	
 			translated = @@languages[locale][str] if locale && @@languages[locale]
+						
 			translated ||= str
 			
 			return translated

@@ -1,6 +1,6 @@
 ActionController::Base.class_eval do
 	# Check if it should render with the language defined in SimplyGlobal
-	def render_with_simply_global(options = nil, extra_options = {}, &block)
+	def render_with_simply_global(options = nil, &block)
 		if should_use_locale?(options) 
 			# If it's a partial, try to load it
 			if options && options[:partial]
@@ -16,7 +16,7 @@ ActionController::Base.class_eval do
 			end
 		end
 	
-		render_without_simply_global(options, extra_options, block)
+		render_without_simply_global(options, block)
 	end
 	
 	# Redirect with SimplyGlobal 
@@ -40,6 +40,7 @@ ActionController::Base.class_eval do
 	private
 	# Check if it should render with the language defined in SimplyGlobal
 	def should_use_locale?(options={})
+		options ||= {}
 		(SimplyGlobal.always_use? || options[:use_simply_global]) && SimplyGlobal.locale
 	end
 end

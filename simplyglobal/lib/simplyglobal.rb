@@ -96,7 +96,23 @@ class SimplyGlobal
 		"%d months" => "%d mois",
 		"about 1 year" => "environ 1 an",
 		"over %d years" => "plus de %d ans",
-	}	
+	}
+	
+	# Months
+	MONTHS_FR = {
+		"January" => "Janvier",
+		"February" => "Février",
+		"March" => "Mars",
+		"April" => "Avril",
+		"May" => "Mai",
+		"June" => "Juin",
+		"July" => "Juillet",
+		"August" => "Août",
+		"September" => "Septembre",
+		"October" => "Octobre",
+		"November" => "Novembre",
+		"December" => "Décembre"
+	}
 	
 	# If the users sets the local on fr, change default error messages
 	def self.add_fr_strings
@@ -104,6 +120,27 @@ class SimplyGlobal
 			ActiveRecord::Errors.default_error_messages = ERROR_MESSAGE_FR
 			@@languages[:fr] = {} if @@languages[:fr].nil?
 			@@languages[:fr].merge!(TIME_AGO_FR)
+			@@languages[:fr].merge!(MONTHS_FR)
+			
+			# Add months in lowercase
+			months_lower = {}
+			MONTHS_FR.each_pair do |k,v|
+				months_lower[k.downcase] = v.downcase
+			end
+			@@languages[:fr].merge!(months_lower)
+			
+			# Add months abbreviations
+			months_abbrev = {}
+			MONTHS_FR.each_pair do |k,v|
+				en = k[0..2]				
+				fr = v[0..2]
+				# I have to include decembre and august in exceptions because there is
+				# an accent in the abbreviation
+				fr = v[0..3] if ["july", "september", "december", "august"].include?(k.downcase)
+				months_abbrev[en] = fr
+				months_abbrev[en.downcase] = fr.downcase
+			end
+			@@languages[:fr].merge!(months_abbrev)
 		end
 	end
 	

@@ -1,6 +1,5 @@
 class SimplyGlobal
-	# Looks like we have to init the class variables
-	
+	# Looks like we have to init the class variables	
 	@@languages = {}
 	@@locale = nil
 	@@always_use = true
@@ -14,8 +13,9 @@ class SimplyGlobal
 	# Sets the locale
 	# If string, it will be converted to a symbol
 	def self.locale=(x)
-		x = x.to_sym if x.is_a? String 	
-		@@locale=x 
+		x = x.to_sym if x.is_a? String		
+		@@locale=x
+		add_fr_strings
 	end
 	
 	# Use for render and redirect to ?
@@ -64,6 +64,49 @@ class SimplyGlobal
 			return translated
 		end
 	end
+	
+	private
+	# Error messages in french
+	ERROR_MESSAGE_FR = {
+	  :even=>"doit être pair", :too_long=>"est trop long (maximum de %d caractères)",
+	  :greater_than_or_equal_to=>"doit être plus grand ou égal à %d",
+	  :empty=>"ne peut être vide", :exclusion=>"est reservé",
+	  :too_short=>"est trop court (minimum de %d caractères)",
+	  :equal_to=>"doit être égal à %d", :invalid=>"est non-valide",
+	  :wrong_length=>"n'est pas de la bonne longueur (devrait être %d caractères)",
+	  :less_than=>"doit être moins de %d", :confirmation=>"n'égale pas la confirmatioon",
+	  :taken=>"a déjà été utilisé", :less_than_or_equal_to=>"doit être plus petit ou égal à %d",
+	  :accepted=>"doit être accepté", :not_a_number=>"n'est pas un nombre", :odd=>"doit être impair",
+	  :blank=>"ne peut pas être vide", :greater_than=>"doit être plus grand que %d",
+	  :inclusion=>"n'est pas inclus dans la liste"
+	}
+	
+	# Time ago
+	TIME_AGO_FR = {
+		"less than a minute" => "moins d'une minute",
+		"1 minute" => "1 minute",
+		"%d minutes" => "%d minutes",
+		"less than %d seconds" => "moins de %d secondes",
+		"half a minute" => "une demi-minute",
+		"about 1 hour" => "environ 1 heure",
+		"about %d hour" => "environ %d heures",
+		"1 day" => "1 jour",
+		"%d days" => "%d jours",
+		"about 1 month" => "environ 1 mois",
+		"%d months" => "%d mois",
+		"about 1 year" => "environ 1 an",
+		"over %d years" => "plus de %d ans",
+	}	
+	
+	# If the users sets the local on fr, change default error messages
+	def self.add_fr_strings
+		if @@locale == :fr
+			ActiveRecord::Errors.default_error_messages = ERROR_MESSAGE_FR
+			@@languages[:fr] = {} if @@languages[:fr].nil?
+			@@languages[:fr].merge!(TIME_AGO_FR)
+		end
+	end
+	
 end
 
 class String

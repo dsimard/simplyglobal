@@ -68,3 +68,35 @@ ActionView::Base.class_eval do
 
 	alias_method_chain :render, :simply_global
 end
+
+ActionView::Helpers::DateHelper.class_eval do
+	def distance_of_time_in_words(from_time, to_time = 0, include_seconds = false)
+		from_time = from_time.to_time if from_time.respond_to?(:to_time)
+		to_time = to_time.to_time if to_time.respond_to?(:to_time)
+		distance_in_minutes = (((to_time - from_time).abs)/60).round
+		distance_in_seconds = ((to_time - from_time).abs).round
+	
+		case distance_in_minutes
+		  when 0..1
+			return (distance_in_minutes == 0) ? "less than a minute".t : "%d minute".t(1) unless include_seconds
+			case distance_in_seconds
+			  when 0..4 then "less than %d seconds".t(5)
+			  when 5..9 then "less than %d seconds".t(10)
+			  when 10..19 then "less than %d seconds".t(20)
+			  when 20..39 then "half a minute"
+			  when 40..59 then "less than a minute".t
+			  else "%d minute".t(1)
+			end
+	
+		  when 2..44 then "%d minutes".t(distance_in_minutes)
+		  when 45..89 then "about 1 hour".t
+		  when 90..1439 then "about %d hours".t((distance_in_minutes.to_f / 60.0).round)
+		  when 1440..2879 then "1 day".t
+		  when 2880..43199 then "%d days".t((distance_in_minutes / 1440).round)
+		  when 43200..86399 then "about 1 month".t
+		  when 86400..525599 then "%d months".t((distance_in_minutes / 43200).round)
+		  when 525600..1051199 then "about 1 year".t
+		  else "over %d years".t((distance_in_minutes / 525600).round)
+		end
+	end	
+end

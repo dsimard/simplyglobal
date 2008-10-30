@@ -41,13 +41,13 @@ ActionController::Base.class_eval do
 	# Check if it should render with the language defined in SimplyGlobal
 	def should_use_locale?(options={})
 		options ||= {}
-		(SimplyGlobal.always_use? || options[:use_simply_global]) && SimplyGlobal.locale
+		(options[:use_simply_global]) && SimplyGlobal.locale
 	end
 end
 
 ActionView::Base.class_eval do
 	def render_with_simply_global(options = {}, old_local_assigns = {}, &block)
-		if (SimplyGlobal.always_use? || options[:use_simply_global]) && options[:partial]
+		if (options[:use_simply_global]) && options[:partial]
 			logger.debug("It's a partial at #{options[:partial]}")
 			new_path = "#{options[:partial]}_#{SimplyGlobal.locale.to_s}"
 			logger.debug("New path : #{new_path}")

@@ -2,7 +2,6 @@ class SimplyGlobal
 	# Looks like we have to init the class variables	
 	@@languages = {}
 	@@locale = nil
-	@@always_use = true
 	
 	# Return the locale
 	# If default, returns nil
@@ -20,11 +19,13 @@ class SimplyGlobal
 	
 	# Use for render and redirect to ?
 	def self.always_use?
-		@@always_use
+		warn 'This method is deprecated and does nothing'
+		true
 	end
 	
 	def self.always_use=(b)
-		@@always_use = b
+		warn 'This method is deprecated and does nothing'
+		true
 	end
 		
 	# Add a language hash
